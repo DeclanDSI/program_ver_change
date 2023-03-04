@@ -1,0 +1,19 @@
+#!/bin/bash
+read -p "Enter Program Name: " program_name
+read -p "Enter Program Ver: " program_ver
+
+apk add $program_name=$program_ver
+if [ $? -eq 0 ]; then
+	echo "$program_name-$program_ver has been installed and symlink is being created."
+	which $program_name-$program_ver 1> /dev/null
+	if [$? -eq 0]; then
+		ln -sf "$(which $program_name)-$program_ver" "$(which $program_name)"
+	else
+		echo "Unable to create symlink. Perhaps version syntax is different?"
+		exit 1
+	fi
+else
+	echo "Program is unable to be installed"
+	exit 1
+fi
+
